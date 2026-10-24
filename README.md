@@ -23,7 +23,7 @@ vision/
 
 ใช้เพื่อลองรันสคริปต์สั้น ๆ ก่อนขึ้น Colab ถ้าจะ train บน Colab อย่างเดียว ข้ามไปขั้นที่ 2 ได้
 
-ต้องมี [uv](https://docs.astral.sh/uv/) (`brew install uv` บน macOS) จากนั้นรันในโฟลเดอร์ `vision/`:
+ต้องมี [uv](https://docs.astral.sh/uv/) (`brew install uv` บน macOS) จากนั้นรันในโฟลเดอร์ `vision`:
 
 ```bash
 uv venv --python 3.12
@@ -33,7 +33,7 @@ uv venv --python 3.12
 uv pip install ultralytics==8.4.184
 ```
 
-แตก dataset จากขั้นที่ 2 ไว้ใน `vision/` แล้วลองรัน smoke test (1 epoch, ข้อมูล 20%) เพื่อเช็กว่า dataset และสคริปต์ใช้ได้:
+แตก dataset จากขั้นที่ 2 ไว้ใน `vision` แล้วลองรัน smoke test (1 epoch, ข้อมูล 20%) เพื่อเช็กว่า dataset และสคริปต์ใช้ได้:
 
 ```bash
 .venv/bin/python scripts/train_segmentation.py --name smoke_seg --epochs 1 --fraction 0.2
@@ -45,7 +45,7 @@ uv pip install ultralytics==8.4.184
 
 ดาวน์โหลด **[datasets.zip](https://drive.google.com/file/d/1cULKxDoRD_H2sM1wvKrukQ77bqhTGexz/view?usp=drive_link)** จาก Google Drive (~100 MB) มีครบทั้ง segmentation, detection และ classification **ไม่ต้องแตกไฟล์** ไปขั้นที่ 3 ได้เลย
 
-ถ้าจะลองรันในเครื่องตามขั้นที่ 1 ให้แตก zip ในโฟลเดอร์ `vision/` จะได้ `vision/datasets/robusta-7cls/...`
+ถ้าจะลองรันในเครื่องตามขั้นที่ 1 ให้แตก zip ในโฟลเดอร์ `vision` จะได้ `vision/datasets/robusta-7cls/...`
 
 ## ขั้นที่ 3: อัปโหลดขึ้น Google Drive
 
@@ -58,11 +58,11 @@ MyDrive/TESA/vision/
 ```
 
 ถ้าใช้ชื่อโฟลเดอร์อื่น ให้ไปแก้ `DRIVE_DIR` ใน notebook (ขั้นที่ 5)
-ถ้าแก้สคริปต์ในเครื่อง ต้องอัปโหลด `scripts/` ทับใน Drive ใหม่ทุกครั้ง
+ถ้าแก้สคริปต์ในเครื่อง ต้องอัปโหลด `vision/scripts` ทับใน Drive ใหม่ทุกครั้ง
 
 ## ขั้นที่ 4: เปิด notebook และเลือก GPU
 
-1. เข้า [colab.research.google.com](https://colab.research.google.com) → **File → Upload notebook** → เลือก `colab/train_colab.ipynb`
+1. เข้า [colab.research.google.com](https://colab.research.google.com) → **File → Upload notebook** → เลือก `vision/colab/train_colab.ipynb`
 2. **Runtime → Change runtime type → T4 GPU** → Save
 3. รัน cell แรก (`!nvidia-smi`) ต้องเห็นชื่อการ์ด Tesla T4 ถ้าขึ้น error แปลว่ายังไม่ได้เลือก GPU
 
@@ -115,7 +115,7 @@ runs/<name>_test/                # ผลบนชุด test + confusion matrix
 |---|---|
 | หาโฟลเดอร์ผลไม่เจอ / มีโฟลเดอร์ `<name>-2` | ใช้ `--name` ซ้ำ ultralytics จึงสร้างโฟลเดอร์ใหม่แทนการทับ ดูชื่อจริงจากบรรทัด `best weights:` ท้าย log |
 | `cp: cannot stat ... scripts` หรือ `unzip: cannot find` | `DRIVE_DIR` ไม่ตรงกับโฟลเดอร์ใน Drive หรือยังไม่ได้ mount |
-| `Dataset ... images not found` | ไม่ได้ใช้ `datasets.zip` จาก link ในขั้นที่ 2 หรือแตก zip / เปลี่ยนชื่อไฟล์ก่อนอัปโหลด |
+| `Dataset ... images not found` | ไม่ได้ใช้ `vision/datasets.zip` จาก link ในขั้นที่ 2 หรือแตก zip / เปลี่ยนชื่อไฟล์ก่อนอัปโหลด |
 | train ช้ามาก / ขึ้น `device=cpu` | ยังไม่ได้เลือก T4 GPU (ขั้นที่ 4) |
 | Colab หลุดกลางทาง | รัน cell เตรียมโค้ดใหม่ แล้วใช้ cell "Colab หลุด" ท้าย notebook (`resume=True` จาก `last.pt`) จากนั้นรัน cell test/export |
 | `ModuleNotFoundError: ultralytics` | runtime ถูก reset ให้รัน cell เตรียมโค้ดอีกครั้ง |
